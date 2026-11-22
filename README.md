@@ -6,4 +6,9 @@ Is a move legal or not?
 
 Shuffle the cards and draw.
 
+## Documentation
+
+- [Opencode Cost Summary & Monitoring](docs/opencode.md)
+
+
 

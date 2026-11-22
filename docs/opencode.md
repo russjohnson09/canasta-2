@@ -1,6 +1,6 @@
 # Opencode Cost Summary & Monitoring
 
-This document describes how to monitor and summarize the token usage and estimated execution costs of running OpenCode in GitHub Actions or locally.
+This document describes how to monitor and summarize the token usage and estimated execution costs of running OpenCode in GitHub Actions or locally. For more details on the workflow configuration, refer to [hello.yml](../.github/workflows/hello.yml).
 
 ## GitHub Actions Cost Summary
 
@@ -14,3 +14,4 @@ The summary includes:
 ## Local Cost Monitoring
 
 When running OpenCode locally, you can track token usage and cost metrics directly from the CLI logs or output summaries provided after each task completion.
+
