@@ -1,16 +1,15 @@
 name: Hello
 
 on:
-  # schedule:
-  #   # Runs every Monday & Thursday at 04:00 UTC (low-traffic window)
-  #   - cron: "0 4 * * 1,4"
-  workflow_dispatch: # Lets you test manually from the Actions tab
+  workflow_dispatch:
     inputs:
       model:
         description: 'The model to use with OpenCode'
         required: true
         default: 'google/gemini-flash-lite-latest'
         type: string
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
 
 permissions:
   contents: write
@@ -18,6 +17,7 @@ permissions:
 
 jobs:
   hello:
+    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && (github.event.action != 'ready_for_review' || github.event.pull_request.head.sha != github.event.before))
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
