@@ -1,0 +1,40 @@
+name: 'Summarize Opencode Cost'
+description: 'Generates and appends OpenCode stats and cost summary to GITHUB_STEP_SUMMARY'
+inputs:
+  model:
+    description: 'The model used for the run'
+    required: false
+    default: 'google/gemini-flash-lite-latest'
+runs:
+  using: "composite"
+  steps:
+    - name: Summarize Opencode Cost
+      if: always()
+      shell: bash
+      run: |
+        MODEL="${{ inputs.model }}"
+        echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- Model: $MODEL" >> $GITHUB_STEP_SUMMARY
+
+        STATS_OUTPUT=$(npx opencode stats 2>&1 || echo "Stats unavailable")
+        MODELS_OUTPUT=$(npx opencode stats --models 2>&1 || echo "Stats unavailable")
+        COST_OUTPUT=$(npx opencode stats --cost 2>&1 || echo "Stats unavailable")
+
+        echo "### Opencode Run Output" >> $GITHUB_STEP_SUMMARY
+        if [ -f opencode_output.log ]; then
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat opencode_output.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        else
+          if [ -f opencode_summary.md ]; then
+            cat opencode_summary.md >> $GITHUB_STEP_SUMMARY
+          fi
+        fi
+
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
+        echo "$MODELS_OUTPUT" >> $GITHUB_STEP_SUMMARY
+        echo "$COST_OUTPUT" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+
+        echo "For more details, see [Opencode Cost Documentation](./docs/opencode.md)." >> $GITHUB_STEP_SUMMARY

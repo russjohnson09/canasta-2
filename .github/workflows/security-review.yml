@@ -1,0 +1,60 @@
+name: Security Review
+
+on:
+  schedule:
+    # 3:00 AM Eastern Time (8:00 AM UTC)
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'The model to use with OpenCode'
+        required: true
+        default: 'google/gemini-flash-lite-latest'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  security-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Cache global node modules
+        uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Security Review with OpenCode
+        env:
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
+          npx opencode run \
+            --model "$MODEL" \
+            --auto \
+            "Perform a security review of the codebase and output any findings to security_review.md."
+
+      - name: Summarize Opencode Cost
+        if: always()
+        uses: ./.github/actions/summarize-cost
+        with:
+          model: ${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}
