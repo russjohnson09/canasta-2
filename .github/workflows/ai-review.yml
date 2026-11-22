@@ -115,12 +115,13 @@ jobs:
         run: |
           MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
 
-          git diff main HEAD > diff.patch
+          git fetch origin main || true
+          git diff origin/main HEAD > diff.patch
 
           npx opencode run \
             --model "$MODEL" \
             --auto \
-            "Write a summary of the changes in diff.patch to opencode_output.md." 
+            "Write a summary of the changes in diff.patch to opencode_output.md."
 
       - name: Summarize Opencode Cost
         if: always()
