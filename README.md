@@ -12,3 +12,12 @@ Shuffle the cards and draw.
 
 
 
+
+The package.json and node versioning exists mostly for PR checks and some one off scripts.
+
+The main code is not necessarily written in node.
+
+
+Node is pretty powerful in terms of writing quick one off scripts that can execute specific tasks.
+
+It is not necessarily the correct programming language to use for the final product.
