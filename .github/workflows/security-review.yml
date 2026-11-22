@@ -1,6 +1,9 @@
 name: Security Review
 
 on:
+  schedule:
+    # 3:00 AM Eastern Time (8:00 AM UTC)
+    - cron: '0 8 * * *'
   workflow_dispatch:
     inputs:
       model:
@@ -15,7 +18,6 @@ permissions:
 
 jobs:
   security-review:
-    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && (github.event.action != 'ready_for_review' || github.event.pull_request.head.sha != github.event.before))
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -41,27 +43,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-
-      - name: AI Security Summary
+      - name: Run Security Review with OpenCode
         env:
-          # GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-                  # https://opencode.ai/docs/cli/commands/
-
         run: |
           MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
-
-          git fetch origin main || true
-          git diff origin/main HEAD > diff.patch
-
           npx opencode run \
             --model "$MODEL" \
             --auto \
-            "Write a summary of potential security vulnerabilities in this code."
+            "Perform a security review of the codebase and output any findings to security_review.md."
 
       - name: Summarize Opencode Cost
         if: always()
         uses: ./.github/actions/summarize-cost
         with:
           model: ${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}
-
