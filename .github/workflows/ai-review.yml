@@ -103,9 +103,7 @@ jobs:
           npx opencode run \
             --model "$MODEL" \
             --auto \
-            "Provide a summary of the current branch compared to main. Write this summary to opencode_output.log" 
-# > opencode_output.log 2>&1 || true
-# cat opencode_output.log
+            "Provide a summary of the current branch compared to main and write this to opencode_output.log" 
 
       - name: Summarize Opencode Cost
         if: always()
