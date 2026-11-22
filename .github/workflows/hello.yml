@@ -60,7 +60,8 @@ jobs:
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-          opencode stats >> $GITHUB_STEP_SUMMARY
+          STATS_OUTPUT=$(opencode stats 2>&1 || echo "Stats unavailable")
+          echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
 
       - name: Summarize Opencode Cost
         if: always()
