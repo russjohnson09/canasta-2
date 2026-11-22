@@ -73,6 +73,10 @@ jobs:
             --auto \
             "Say hello."
 
+
+# echo "$STATS_OUTPUT"
+# echo "$MODELS_OUTPUT"
+# echo "$COST_OUTPUT"
       - name: Summarize Opencode Cost
         if: always()
         run: |
@@ -82,9 +86,6 @@ jobs:
           STATS_OUTPUT=$(npx opencode stats 2>&1 || echo "Stats unavailable")
           MODELS_OUTPUT=$(npx opencode stats --models 2>&1 || echo "Stats unavailable")
           COST_OUTPUT=$(npx opencode stats --cost 2>&1 || echo "Stats unavailable")
-          echo "$STATS_OUTPUT"
-          echo "$MODELS_OUTPUT"
-          echo "$COST_OUTPUT"
 
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
