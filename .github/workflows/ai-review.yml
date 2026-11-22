@@ -106,7 +106,7 @@ jobs:
 # ốngốngốngốngốngốngốngốngốngốngốngốngốngốngốngốngống
 # Error: Requests ending with a model turn are not supported.
 # Error: Process completed with exit code 1.
-      - name: Run OpenCode to add tests
+      - name: AI Diff Summary
         env:
           # GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -121,7 +121,7 @@ jobs:
           npx opencode run \
             --model "$MODEL" \
             --auto \
-            "Write a summary of the changes in diff.patch to opencode_output.md."
+            "Write a summary of the changes in diff.patch to opencode_summary.md."
 
       - name: Summarize Opencode Cost
         if: always()

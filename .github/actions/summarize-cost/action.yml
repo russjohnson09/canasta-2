@@ -26,7 +26,6 @@ runs:
           cat opencode_output.log >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
         else
-          echo "Output log unavailable" >> $GITHUB_STEP_SUMMARY
           if [ -f opencode_summary.md ]; then
             cat opencode_summary.md >> $GITHUB_STEP_SUMMARY
           fi
