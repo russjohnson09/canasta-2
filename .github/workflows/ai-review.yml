@@ -91,7 +91,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Gemini 3.5 Flash Lite
+
+# https://github.com/russjohnson09/canasta-2/actions/runs/44996056501/job/137127225344?pr=1
+# $ git branch --show-current && git log main..HEAD --oneline
+# fatal: ambiguous argument 'main..HEAD': unknown revision or path not in the working tree.
+# Use '--' to separate paths from revisions, like this:
+# 'git <command> [<revision>...] -- [<file>...]'
+
+# ốngốngốngốngốngốngốngốngốngốngốngốngốngốngốngốngống
+# Error: Requests ending with a model turn are not supported.
+# Error: Process completed with exit code 1.
       - name: Run OpenCode to add tests
         env:
           # GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -100,10 +109,13 @@ jobs:
 
         run: |
           MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
+
+          git diff origin/main HEAD > diff.patch
+
           npx opencode run \
             --model "$MODEL" \
             --auto \
-            "Provide a summary of the current branch compared to main and write this to opencode_output.log" 
+            "Write a summary of the changes in diff.patch to opencode_output.log" 
 
       - name: Summarize Opencode Cost
         if: always()
