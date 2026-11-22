@@ -105,6 +105,10 @@ jobs:
             --auto \
             "Respond with FAILED" > opencode_output.log 2>&1 || true
           cat opencode_output.log
+          if ! grep -q "SUCCESS" opencode_output.log; then
+            echo "Error: OpenCode run output did not contain SUCCESS."
+            exit 1
+          fi
 
       - name: Summarize Opencode Cost
         if: always()
