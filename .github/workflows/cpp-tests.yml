@@ -1,0 +1,26 @@
+name: C++ Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cpp-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake catch2
+
+      - name: Build and Run Tests
+        run: |
+          g++ -std=c++17 deck_test.cpp -o deck_test -lCatch2
+          ./deck_test
