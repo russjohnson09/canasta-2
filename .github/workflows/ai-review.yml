@@ -8,6 +8,11 @@ on:
         required: true
         default: 'google/gemini-flash-lite-latest'
         type: string
+      run_always_fail:
+        description: 'Run the always-fail job'
+        required: false
+        default: false
+        type: boolean
   pull_request:
     types: [opened, synchronize, ready_for_review]
 
@@ -110,7 +115,7 @@ jobs:
         run: |
           MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
 
-          git diff origin/main HEAD > diff.patch
+          git diff main HEAD > diff.patch
 
           npx opencode run \
             --model "$MODEL" \
@@ -126,7 +131,7 @@ jobs:
 
   always-fail:
     needs: hello
-    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && (github.event.action != 'ready_for_review' || github.event.pull_request.head.sha != github.event.before))
+    if: ${{ github.event.inputs.run_always_fail == 'true' || github.event.inputs.run_always_fail == true }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
