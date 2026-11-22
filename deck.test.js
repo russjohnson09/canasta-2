@@ -25,3 +25,13 @@ test('Deck - should throw error when drawing more cards than available', () => {
   const deck = new Deck();
   assert.throws(() => deck.draw(53), /Not enough cards in the deck/);
 });
+
+test('Deck - should contain queen of hearts exactly once when drawn all cards', () => {
+  const deck = new Deck();
+  deck.shuffle();
+  const allCards = deck.draw(52);
+  const queenOfHeartsCount = allCards.filter(
+    card => card.value === 'Q' && card.suit === 'hearts'
+  ).length;
+  assert.strictEqual(queenOfHeartsCount, 1);
+});
