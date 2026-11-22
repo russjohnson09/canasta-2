@@ -20,6 +20,15 @@ runs:
         MODELS_OUTPUT=$(npx opencode stats --models 2>&1 || echo "Stats unavailable")
         COST_OUTPUT=$(npx opencode stats --cost 2>&1 || echo "Stats unavailable")
 
+        echo "### Opencode Run Output" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        if [ -f opencode_output.log ]; then
+          cat opencode_output.log >> $GITHUB_STEP_SUMMARY
+        else
+          echo "Output log unavailable" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo '```' >> $GITHUB_STEP_SUMMARY
+
         echo '```' >> $GITHUB_STEP_SUMMARY
         echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
         echo "$MODELS_OUTPUT" >> $GITHUB_STEP_SUMMARY
