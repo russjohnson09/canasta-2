@@ -55,6 +55,12 @@ jobs:
             --model "$MODEL" \
             --auto \
             "Say hello."
+          opencode stats
+          echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+          { opencode stats } >> $GITHUB_STEP_SUMMARY
 
       - name: Summarize Opencode Cost
         if: always()
@@ -69,7 +75,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Opencode Stats" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          opencode stats 2>&1 || echo "Stats unavailable" >> $GITHUB_STEP_SUMMARY
+          opencode stats 2>&1 || true
+          { opencode stats 2>&1 || echo "Stats unavailable"; } >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "For more details, see [Opencode Cost Documentation](./docs/opencode.md)." >> $GITHUB_STEP_SUMMARY
