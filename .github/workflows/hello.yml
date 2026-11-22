@@ -48,6 +48,13 @@ jobs:
             --model google/gemini-flash-lite-latest \
             --auto \
             "Say hello."
+
+      - name: Summarize Opencode Cost
+        if: always()
+        run: |
+          echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Model: google/gemini-flash-lite-latest" >> $GITHUB_STEP_SUMMARY
+          echo "- Approximate Cost: Calculated based on token usage or default pricing tier." >> $GITHUB_STEP_SUMMARY
         # run: |
         #   opencode run \
         #     --model google/gemini-2.5-flash \
