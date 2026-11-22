@@ -41,6 +41,21 @@ jobs:
       #     npm ci
       #     npx vitest run --coverage --reporter=json > coverage-summary.txt || true
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Cache global node modules
+        uses: actions/cache@v4
+        id: npm-cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install OpenCode
         run: npm install -g opencode-ai
 
@@ -57,25 +72,12 @@ jobs:
             --model "$MODEL" \
             --auto \
             "Say hello."
-          # opencode stats
-          # echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-          # echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-          # echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-          # echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-          # opencode stats
-          # opencode stats --json
-          # opencode stats --cost
-          # opencode stats --models
-          # STATS_OUTPUT=$(opencode stats 2>&1 || echo "Stats unavailable")
-          # echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
 
       - name: Summarize Opencode Cost
         if: always()
         run: |
           MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-          # echo "- Model: $MODEL" >> $GITHUB_STEP_SUMMARY
-          # echo "" >> $GITHUB_STEP_SUMMARY
 
           STATS_OUTPUT=$(opencode stats 2>&1 || echo "Stats unavailable")
           MODELS_OUTPUT=$(opencode stats --models 2>&1 || echo "Stats unavailable")
@@ -90,35 +92,8 @@ jobs:
           echo "$COST_OUTPUT" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
-
-
-          # echo "### Opencode Stats" >> $GITHUB_STEP_SUMMARY
-          # echo '```' >> $GITHUB_STEP_SUMMARY
-          # STATS_OUTPUT=$(opencode stats 2>&1 || echo "Stats unavailable")
-          # echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
-          # echo '```' >> $GITHUB_STEP_SUMMARY
-          # echo "" >> $GITHUB_STEP_SUMMARY
-
           echo "For more details, see [Opencode Cost Documentation](./docs/opencode.md)." >> $GITHUB_STEP_SUMMARY
 
-      # - name: Summarize Opencode Cost
-      #   if: always()
-      #   run: |
-      #     MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
-      #     echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
-      #     echo "- Model: $MODEL" >> $GITHUB_STEP_SUMMARY
-      #     echo "- Prompt Tokens: ~150" >> $GITHUB_STEP_SUMMARY
-      #     echo "- Completion Tokens: ~50" >> $GITHUB_STEP_SUMMARY
-      #     echo "- Total Tokens: ~200" >> $GITHUB_STEP_SUMMARY
-      #     echo "- Estimated Cost: \$0.00003" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo "### Opencode Stats" >> $GITHUB_STEP_SUMMARY
-      #     echo '```' >> $GITHUB_STEP_SUMMARY
-      #     STATS_OUTPUT=$(opencode stats 2>&1 || echo "Stats unavailable")
-      #     echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
-      #     echo '```' >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo "For more details, see [Opencode Cost Documentation](./docs/opencode.md)." >> $GITHUB_STEP_SUMMARY
 
       # - name: Create Pull Request
       #   uses: peter-evans/create-pull-request@v7
