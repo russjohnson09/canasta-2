@@ -49,6 +49,8 @@ jobs:
         env:
           # GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+                  # https://opencode.ai/docs/cli/commands/
+
         run: |
           MODEL="${{ github.event.inputs.model || 'google/gemini-flash-lite-latest' }}"
           opencode run \
@@ -60,6 +62,9 @@ jobs:
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
           echo "### Opencode Execution Summary" >> $GITHUB_STEP_SUMMARY
+          opencode stats
+          opencode stats --json
+          opencode stats --cost
           STATS_OUTPUT=$(opencode stats 2>&1 || echo "Stats unavailable")
           echo "$STATS_OUTPUT" >> $GITHUB_STEP_SUMMARY
 
