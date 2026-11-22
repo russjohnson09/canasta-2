@@ -21,3 +21,6 @@ The main code is not necessarily written in node.
 Node is pretty powerful in terms of writing quick one off scripts that can execute specific tasks.
 
 It is not necessarily the correct programming language to use for the final product.
+
+
+npx opencode-ai
